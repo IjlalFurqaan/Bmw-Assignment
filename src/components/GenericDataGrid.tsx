@@ -59,7 +59,7 @@ const GenericDataGrid: React.FC<GenericDataGridProps> = ({
   const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
   
   const [gridApi, setGridApi] = useState<GridApi | null>(null);
-  const [columnApi, setColumnApi] = useState<ColumnApi | null>(null);
+  const [, setColumnApi] = useState<ColumnApi | null>(null);
 
   // Column definitions with actions column
   const columnDefs: ColDef[] = useMemo(() => {

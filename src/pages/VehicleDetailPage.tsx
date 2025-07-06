@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import {
   Box,
   Paper,
@@ -16,9 +16,18 @@ import {
   Stack,
   IconButton,
   Tooltip,
-} from '@mui/material';
-import { ArrowLeft, Edit, Save, X, Car, Zap, Gauge, MapPin } from 'lucide-react';
-import { vehicleService } from '../services/vehicleService';
+} from "@mui/material";
+import {
+  ArrowLeft,
+  Edit,
+  Save,
+  X,
+  Car,
+  Zap,
+  Gauge,
+  MapPin,
+} from "lucide-react";
+import { vehicleService } from "../services/vehicleService";
 
 interface Vehicle {
   _id: string;
@@ -43,8 +52,8 @@ const VehicleDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const isEditMode = searchParams.get('edit') === 'true';
-  
+  const isEditMode = searchParams.get("edit") === "true";
+
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +74,7 @@ const VehicleDetailPage: React.FC = () => {
       setVehicle(data);
       setEditedVehicle(data);
     } catch (err) {
-      setError('Failed to fetch vehicle details');
+      setError("Failed to fetch vehicle details");
     } finally {
       setLoading(false);
     }
@@ -86,26 +95,36 @@ const VehicleDetailPage: React.FC = () => {
 
     try {
       setSaving(true);
-      const updatedVehicle = await vehicleService.updateVehicle(id, editedVehicle);
+      const updatedVehicle = await vehicleService.updateVehicle(
+        id,
+        editedVehicle
+      );
       setVehicle(updatedVehicle);
       setEditing(false);
     } catch (err) {
-      setError('Failed to update vehicle');
+      setError("Failed to update vehicle");
     } finally {
       setSaving(false);
     }
   };
 
   const handleInputChange = (field: keyof Vehicle, value: string | number) => {
-    setEditedVehicle(prev => ({
+    setEditedVehicle((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: 400,
+        }}
+      >
         <CircularProgress />
       </Box>
     );
@@ -114,19 +133,30 @@ const VehicleDetailPage: React.FC = () => {
   if (error || !vehicle) {
     return (
       <Box sx={{ p: 3 }}>
-        <Alert severity="error" action={
-          <Button color="inherit" size="small" onClick={() => navigate('/')}>
-            Back to Grid
-          </Button>
-        }>
-          {error || 'Vehicle not found'}
+        <Alert
+          severity="error"
+          action={
+            <Button color="inherit" size="small" onClick={() => navigate("/")}>
+              Back to Grid
+            </Button>
+          }
+        >
+          {error || "Vehicle not found"}
         </Alert>
       </Box>
     );
   }
 
-  const InfoCard = ({ title, children, icon }: { title: string; children: React.ReactNode; icon: React.ReactNode }) => (
-    <Card sx={{ height: '100%' }}>
+  const InfoCard = ({
+    title,
+    children,
+    icon,
+  }: {
+    title: string;
+    children: React.ReactNode;
+    icon: React.ReactNode;
+  }) => (
+    <Card sx={{ height: "100%" }}>
       <CardContent>
         <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
           {icon}
@@ -139,15 +169,15 @@ const VehicleDetailPage: React.FC = () => {
     </Card>
   );
 
-  const EditableField = ({ 
-    label, 
-    field, 
-    type = 'text',
-    suffix = ''
-  }: { 
-    label: string; 
-    field: keyof Vehicle; 
-    type?: 'text' | 'number';
+  const EditableField = ({
+    label,
+    field,
+    type = "text",
+    suffix = "",
+  }: {
+    label: string;
+    field: keyof Vehicle;
+    type?: "text" | "number";
     suffix?: string;
   }) => {
     if (editing) {
@@ -157,10 +187,19 @@ const VehicleDetailPage: React.FC = () => {
           size="small"
           label={label}
           type={type}
-          value={editedVehicle[field] || ''}
-          onChange={(e) => handleInputChange(field, type === 'number' ? Number(e.target.value) : e.target.value)}
+          value={editedVehicle[field] || ""}
+          onChange={(e) =>
+            handleInputChange(
+              field,
+              type === "number" ? Number(e.target.value) : e.target.value
+            )
+          }
           InputProps={{
-            endAdornment: suffix ? <Typography variant="body2" color="text.secondary">{suffix}</Typography> : undefined
+            endAdornment: suffix ? (
+              <Typography variant="body2" color="text.secondary">
+                {suffix}
+              </Typography>
+            ) : undefined,
           }}
         />
       );
@@ -172,24 +211,25 @@ const VehicleDetailPage: React.FC = () => {
           {label}
         </Typography>
         <Typography variant="body1">
-          {vehicle[field]}{suffix}
+          {vehicle[field]}
+          {suffix}
         </Typography>
       </Box>
     );
   };
 
   return (
-    <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
+    <Box sx={{ maxWidth: 1200, mx: "auto" }}>
       {/* Header */}
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+      <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
         <Button
           startIcon={<ArrowLeft size={20} />}
-          onClick={() => navigate('/')}
+          onClick={() => navigate("/")}
           sx={{ mr: 2 }}
         >
           Back to Grid
         </Button>
-        
+
         <Box sx={{ flexGrow: 1 }}>
           <Typography variant="h4">
             {vehicle.brand} {vehicle.model}
@@ -215,7 +255,7 @@ const VehicleDetailPage: React.FC = () => {
                 onClick={handleSave}
                 disabled={saving}
               >
-                {saving ? 'Saving...' : 'Save'}
+                {saving ? "Saving..." : "Save"}
               </Button>
             </>
           ) : (
@@ -241,7 +281,12 @@ const VehicleDetailPage: React.FC = () => {
               <EditableField label="Body Style" field="bodyStyle" />
               <EditableField label="Segment" field="segment" />
               <EditableField label="Seats" field="seats" type="number" />
-              <EditableField label="Price" field="priceEuro" type="number" suffix=" €" />
+              <EditableField
+                label="Price"
+                field="priceEuro"
+                type="number"
+                suffix=" €"
+              />
             </Stack>
           </InfoCard>
         </Grid>
@@ -250,10 +295,30 @@ const VehicleDetailPage: React.FC = () => {
         <Grid item xs={12} md={6}>
           <InfoCard title="Performance" icon={<Gauge size={20} />}>
             <Stack spacing={2}>
-              <EditableField label="Acceleration (0-100 km/h)" field="accelSec" type="number" suffix=" sec" />
-              <EditableField label="Top Speed" field="topSpeedKmH" type="number" suffix=" km/h" />
-              <EditableField label="Range" field="rangeKm" type="number" suffix=" km" />
-              <EditableField label="Efficiency" field="efficiencyWhKm" type="number" suffix=" Wh/km" />
+              <EditableField
+                label="Acceleration (0-100 km/h)"
+                field="accelSec"
+                type="number"
+                suffix=" sec"
+              />
+              <EditableField
+                label="Top Speed"
+                field="topSpeedKmH"
+                type="number"
+                suffix=" km/h"
+              />
+              <EditableField
+                label="Range"
+                field="rangeKm"
+                type="number"
+                suffix=" km"
+              />
+              <EditableField
+                label="Efficiency"
+                field="efficiencyWhKm"
+                type="number"
+                suffix=" Wh/km"
+              />
             </Stack>
           </InfoCard>
         </Grid>
@@ -262,7 +327,12 @@ const VehicleDetailPage: React.FC = () => {
         <Grid item xs={12} md={6}>
           <InfoCard title="Electric Specifications" icon={<Zap size={20} />}>
             <Stack spacing={2}>
-              <EditableField label="Fast Charge Speed" field="fastChargeKmH" type="number" suffix=" km/h" />
+              <EditableField
+                label="Fast Charge Speed"
+                field="fastChargeKmH"
+                type="number"
+                suffix=" km/h"
+              />
               <EditableField label="Rapid Charge" field="rapidCharge" />
               <EditableField label="Plug Type" field="plugType" />
               <EditableField label="PowerTrain" field="powerTrain" />
@@ -279,7 +349,10 @@ const VehicleDetailPage: React.FC = () => {
                 <Typography variant="body2" color="text.secondary">
                   Record ID
                 </Typography>
-                <Typography variant="body1" sx={{ fontFamily: 'monospace', fontSize: '0.875rem' }}>
+                <Typography
+                  variant="body1"
+                  sx={{ fontFamily: "monospace", fontSize: "0.875rem" }}
+                >
                   {vehicle._id}
                 </Typography>
               </Box>
@@ -289,7 +362,13 @@ const VehicleDetailPage: React.FC = () => {
 
         {/* Key Metrics Summary */}
         <Grid item xs={12}>
-          <Paper sx={{ p: 3, bgcolor: 'primary.main', color: 'primary.contrastText' }}>
+          <Paper
+            sx={{
+              p: 3,
+              bgcolor: "primary.main",
+              color: "primary.contrastText",
+            }}
+          >
             <Typography variant="h6" gutterBottom>
               Key Performance Metrics
             </Typography>
@@ -307,7 +386,9 @@ const VehicleDetailPage: React.FC = () => {
                 <Typography variant="body2">km/h Top Speed</Typography>
               </Grid>
               <Grid item xs={6} sm={3}>
-                <Typography variant="h4">{vehicle.priceEuro.toLocaleString()}</Typography>
+                <Typography variant="h4">
+                  {vehicle.priceEuro.toLocaleString()}
+                </Typography>
                 <Typography variant="body2">€ Price</Typography>
               </Grid>
             </Grid>
